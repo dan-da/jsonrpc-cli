@@ -29,8 +29,10 @@ class Util
             'help',
         );
 
-        $params = getopt( '', $paramsArray, $optind);
+        $params = getopt( '', $paramsArray);
 
+        // simulate getopt optind param for older versions of php.
+        $optind = count($params) + 1;
         $argv = $GLOBALS['argv'];
         
         $params['url'] = @$argv[$optind];
