@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Entry point for jsonrpc-cli.
+ *
+ * Code in this file is related to interacting with the shell.
+ */
+
+// Let's be strict about things.
+require_once __DIR__ . '/vendor/autoload.php';
+\strictmode\initializer::init();
+
+
+use App\Utils\MyLogger;
+use App\AppCore;
+use App\Utils\Report;
+use App\Utils\Util;
+
+
+
+/**
+ * Our main function.  It performs top-level exception handling.
+ */
+function main()
+{
+    // why limit ourselves?    ;-)
+    ini_set('memory_limit', -1 );
+
+    try
+    {
+        // CLI Parameters processing
+        $orig_params = Util::getCliParams();
+        list( $params, $success ) = Util::processCliParams();
+        if( $success != 0 )
+        {
+            return $success;
+        }
+
+        // Creates AppCore object
+        $app = new AppCore($params);
+
+        $response = $app->request();
+
+        // Prints result
+        echo "\n";
+        Report::printResults($params, $response);
+        return 0;
+    }
+    catch(Exception $e)
+    {
+        $json = json_encode( MyLogger::getInstance()->exception_to_array( $e ), JSON_PRETTY_PRINT) . "\n";
+        echo $json;
+//        echo str_replace('\n#', "\n#", $json);
+/*
+        // print validation errors to stdout.
+        if( $e->getCode() == 2 ) {
+            fprintf( STDOUT, $e->getMessage() . "\n\n" );
+        }
+*/        
+        return $e->getCode() ?: 1;
+    }
+}
+
+exit(main());
