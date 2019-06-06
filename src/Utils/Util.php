@@ -153,9 +153,9 @@ END;
     
     /* parses the --cols argument and returns an array of columns.
      */
-    public static function getCols( $params )
+    public static function getCols( $cols )
     {
-        $arg = static::stripWhitespace( @$params['cols'] ?: null );
+        $arg = static::stripWhitespace( $cols );
         
         $cols = [];
 
