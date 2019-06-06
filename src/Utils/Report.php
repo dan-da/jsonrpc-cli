@@ -26,7 +26,7 @@ class Report
 
         // remove columns not in report and change column order.
         $report_cols = $params['cols'];
-        if(!count($report_cols) && !is_scalar($results)) {
+        if(!count($report_cols) && @count(@$results[0]) ) {
             $report_cols = array_keys($results[0]);
         }
         

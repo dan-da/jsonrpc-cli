@@ -49,8 +49,11 @@ function main()
     }
     catch(Exception $e)
     {
-        $json = json_encode( MyLogger::getInstance()->exception_to_array( $e ), JSON_PRETTY_PRINT) . "\n";
-        echo $json;
+        $format = @$params['format'] ?: 'printr';
+        $err = MyLogger::getInstance()->exception_to_array( $e );
+        
+        
+        Report::printResults($params, $err);
 //        echo str_replace('\n#', "\n#", $json);
 /*
         // print validation errors to stdout.
