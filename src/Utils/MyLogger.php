@@ -166,8 +166,8 @@ class MyLogger {
         $arr = [];
         foreach($trace as $item) {
             $arr[] = sprintf('%s:%s in %s%s%s',
-                             $item['file'],
-                             $item['line'],
+                             @$item['file'],
+                             @$item['line'],
                              @$item['class'],
                              @$item['type'],
                              @$item['function']
