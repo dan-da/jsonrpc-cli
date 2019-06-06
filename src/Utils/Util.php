@@ -63,7 +63,7 @@ class Util
             return [$params, 2];
         }        
         
-        $params['format'] = @$params['format'] ?: 'txt';
+        $params['format'] = @$params['format'] ?: 'jsonpretty';
         $params['user'] = @$params['user'];
         $params['pass'] = @$params['pass'];
         $params['url'] = @$params['url'];        
