@@ -25,6 +25,7 @@ class Util
             'loglevel:',
             'httpfile:',
             'version',
+            'highlight:',
             'help',
         );
 
@@ -66,8 +67,10 @@ class Util
         $params['user'] = @$params['user'];
         $params['pass'] = @$params['pass'];
         $params['url'] = @$params['url'];        
+        $params['highlight'] = @$params['highlight'] == 'off' ? false : true;
                 
         $params['method'] = @$params['method'];
+        $params['httpfile'] = @$params['httpfile'];
         
         $params['params'] = json_decode($params['params'], true);
         if(json_last_error() != JSON_ERROR_NONE) {
@@ -135,7 +138,10 @@ class Util
     
                          if 'all' is specified then a file will be created
                          for each format with appropriate extension.
-                         only works when outfile is specified.                         
+                         only works when outfile is specified.
+                         
+    --highlight=<flag>   [ 'on' | 'off' ]   default = on.
+                           highlights output if possible, depending on --format.
 
     --logfile=<path>    path to logfile. if not present logs to stdout.
     --loglevel=<level>  $loglevels

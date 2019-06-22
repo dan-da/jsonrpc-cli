@@ -9,6 +9,8 @@ require_once(__DIR__ . '/../../vendor/autoload.php');
  */
 class Report
 {
+    
+    private static $params;
 
     /* prints out single report in one of several possible formats,
      * or multiple reports, one for each possible format.
@@ -17,6 +19,8 @@ class Report
     {
         $format = $params['format'];
         $outfile = @$params['outfile'];
+        
+        self::$params = $params;
 
         $summary = [];  // placeholder
         
@@ -66,26 +70,34 @@ class Report
     /* writes out results in json (raw) format
      */
     static public function write_results_json( $fh, $results ) {
-        fwrite( $fh, json_encode( $results ) . "\n" );
+        $buf = json_encode( $results );
+        $buf = self::highlighter( $buf, 'json' );
+        fwrite( $fh, $buf . "\n" );
     }
 
     /* writes out results in jsonpretty format
      */
     static public function write_results_jsonpretty( $fh, $results ) {
-        fwrite( $fh, json_encode( $results,  JSON_PRETTY_PRINT ) . "\n" );
+        $buf = json_encode( $results, JSON_PRETTY_PRINT );
+        $buf = self::highlighter($buf, 'json' );
+        fwrite( $fh, $buf . "\n" );
     }
 
 
     /* writes out results in jsonpretty format
      */
     static public function write_results_json5( $fh, $results ) {
-        fwrite( $fh, \RedCat\JSON5\JSON5::encode( $results,  JSON_PRETTY_PRINT, $keep_comments = true ) . "\n" );
+        $buf = \RedCat\JSON5\JSON5::encode( $results,  JSON_PRETTY_PRINT, $keep_comments = true );
+        $buf = self::highlighter( $buf, 'json' );
+        fwrite( $fh,  $buf . "\n" );
     }
 
     /* writes out results in yaml format
      */
     static public function write_results_yaml( $fh, $results ) {
-        fwrite( $fh, spyc_dump( $results) . "\n" );
+        $buf = spyc_dump( $results );
+        $buf = self::highlighter( $buf, 'yaml' );
+        fwrite( $fh, $buf . "\n" );
     }
 
 
@@ -94,6 +106,7 @@ class Report
     static protected function write_results_print_r( $fh, $results ) {
 
         $buf = print_r($results, true );
+        $buf = self::highlighter( $buf, null );
         fwrite( $fh, $buf . "\n" );
     }
     
@@ -103,6 +116,7 @@ class Report
     static protected function write_results_var_dump( $fh, $results ) {
 
         $buf = var_export($results, true );
+        $buf = self::highlighter( $buf, null );
         fwrite( $fh, $buf . "\n" );
     }
 
@@ -110,6 +124,7 @@ class Report
      */
     static protected function write_results_serialize( $fh, $results ) {
         $buf = serialize($results);
+        $buf = self::highlighter( $buf, null );
         fwrite( $fh, $buf . "\n" );
     }
 
@@ -118,6 +133,22 @@ class Report
      */
     static protected function write_results_raw( $fh, $results ) {
         fwrite( $fh, $results . "\n" );
+    }
+    
+    static protected function highlighter($buf, $type = null) {
+        
+        if(!$type || !self::$params['highlight']) {
+            return $buf;
+        }
+        
+        $highlighter = null;
+        switch($type) {
+            case 'json': $highlighter = new \CliHighlighter\Service\Highlighter\JsonHighlighter([]); break;
+            case 'yaml': $highlighter = new \CliHighlighter\Service\Highlighter\YamlHighlighter([]); break;
+            case 'xml':  $highlighter = new \CliHighlighter\Service\Highlighter\XmlHighlighter([]); break;
+            default: return $buf;
+        }
+        return $highlighter->highlight($buf);
     }
     
     

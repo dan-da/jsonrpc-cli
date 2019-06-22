@@ -7,7 +7,8 @@
         "php": ">=5.5",
         "dan-da/strictmode-php": "1.0.1",
         "redcatphp/json5": "1.0.1",
-        "mustangostang/spyc": "0.6.2"
+        "mustangostang/spyc": "0.6.2",
+        "geekdevs/cli-highlighter": "1.0.3"
     },
 
     "require-dev": {
