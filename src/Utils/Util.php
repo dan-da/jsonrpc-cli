@@ -24,7 +24,6 @@ class Util
             'logfile:',
             'loglevel:',
             'httpfile:',
-            'cols:',
             'version',
             'help',
         );
@@ -67,11 +66,14 @@ class Util
         $params['user'] = @$params['user'];
         $params['pass'] = @$params['pass'];
         $params['url'] = @$params['url'];        
-        $params['cols'] = static::getCols( @$params['cols'] );
                 
         $params['method'] = @$params['method'];
-        $params['params'] = @$params['params'];
-                
+        
+        $params['params'] = json_decode($params['params'], true);
+        if(json_last_error() != JSON_ERROR_NONE) {
+            throw new UsageException("Invalid JSON in parameters.  " . json_last_error_msg() );
+        }
+
         if(!$params['url']) {
             throw new UsageException("Destination URL not provided");
         }        
@@ -124,8 +126,7 @@ class Util
 
     --outfile=<path>     specify output file path.
     
-    --format=<format>    [ raw|txt|md|csv|json|jsonpretty|html|list
-                           printr|vardump|serialize|all ]
+    --format=<format>    [ raw|json|jsonpretty|printr|vardump|serialize|all ]
                            
                          default=jsonpretty
                          
@@ -134,9 +135,7 @@ class Util
     
                          if 'all' is specified then a file will be created
                          for each format with appropriate extension.
-                         only works when outfile is specified.
-                         
-                         'list' prints only the first column. see --cols
+                         only works when outfile is specified.                         
 
     --logfile=<path>    path to logfile. if not present logs to stdout.
     --loglevel=<level>  $loglevels
@@ -150,29 +149,6 @@ END;
         fprintf( STDOUT, $buf );
 
     }
-    
-    /* parses the --cols argument and returns an array of columns.
-     */
-    public static function getCols( $cols )
-    {
-        $arg = static::stripWhitespace( $cols );
         
-        $cols = [];
-
-        if( $arg ) {
-            $cols = explode( ',', $arg );
-        }
-
-        return $cols;
-    }
-    
-    
-    /* removes whitespace from a string
-     */
-    public static function stripWhitespace( $str )
-    {
-        return preg_replace('/\s+/', '', $str);
-    }
-    
     
 }

@@ -30,7 +30,7 @@ class AppCore
         return $this->params;
     }    
     
-    /* Derives child keys/addresses for a given key.
+    /* Performs json-rpc request.
      */
     public function request()
     {

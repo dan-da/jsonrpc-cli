@@ -49,11 +49,15 @@ function main()
     }
     catch(Exception $e)
     {
-        $format = @$params['format'] ?: 'printr';
-        $err = MyLogger::getInstance()->exception_to_array( $e );
         
-        
-        Report::printResults($params, $err);
+        if(@$params) {        
+            $format = @$params['format'] ?: 'printr';
+            $err = MyLogger::getInstance()->exception_to_array( $e );
+            Report::printResults($params, $err);
+        }
+        else {
+            fprintf( STDOUT, "\n" . $e->getMessage() . "\n\n" );
+        }
 //        echo str_replace('\n#', "\n#", $json);
 /*
         // print validation errors to stdout.
