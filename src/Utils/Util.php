@@ -126,7 +126,7 @@ class Util
 
     --outfile=<path>     specify output file path.
     
-    --format=<format>    [ raw|json|jsonpretty|printr|vardump|serialize|all ]
+    --format=<format>    [ raw|json|jsonpretty|json5|printr|vardump|serialize|all ]
                            
                          default=jsonpretty
                          

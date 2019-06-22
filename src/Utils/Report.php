@@ -2,8 +2,8 @@
 
 namespace App\Utils;
 
-use texttable;
-use texttable_markdown;
+require_once(__DIR__ . '/../../vendor/autoload.php');
+
 
 /* A class that generates reports in various formats.
  */
@@ -52,6 +52,8 @@ class Report
             case 'vardump':    self::write_results_var_dump( $fh, $results );  break;
             case 'serialize':  self::write_results_serialize( $fh, $results );  break;
             case 'raw':        self::write_results_raw( $fh, $results); break;
+            case 'json5':      self::write_results_json5( $fh, $results); break;
+            case 'yaml':       self::write_results_yaml( $fh, $results); break;
         }
 
         fclose( $fh );
@@ -74,6 +76,19 @@ class Report
     }
 
 
+    /* writes out results in jsonpretty format
+     */
+    static public function write_results_json5( $fh, $results ) {
+        fwrite( $fh, \RedCat\JSON5\JSON5::encode( $results,  JSON_PRETTY_PRINT, $keep_comments = true ) . "\n" );
+    }
+
+    /* writes out results in yaml format
+     */
+    static public function write_results_yaml( $fh, $results ) {
+        fwrite( $fh, spyc_dump( $results) . "\n" );
+    }
+
+
     /* writes out results as php print_r format
      */
     static protected function write_results_print_r( $fh, $results ) {
@@ -87,7 +102,7 @@ class Report
      */
     static protected function write_results_var_dump( $fh, $results ) {
 
-        $buf = var_export(results, true );
+        $buf = var_export($results, true );
         fwrite( $fh, $buf . "\n" );
     }
 
