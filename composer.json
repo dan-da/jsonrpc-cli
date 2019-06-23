@@ -6,9 +6,8 @@
         "dan-da/json-rpc": "1.3.0",
         "php": ">=5.5",
         "dan-da/strictmode-php": "1.0.1",
-        "redcatphp/json5": "1.0.1",
         "mustangostang/spyc": "0.6.2",
-        "geekdevs/cli-highlighter": "1.0.3"
+        "geekdevs/highlight.php": "v9.15.6.1"
     },
 
     "require-dev": {
