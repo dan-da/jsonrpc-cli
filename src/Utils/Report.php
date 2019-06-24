@@ -56,7 +56,6 @@ class Report
             case 'vardump':    self::write_results_var_dump( $fh, $results );  break;
             case 'serialize':  self::write_results_serialize( $fh, $results );  break;
             case 'raw':        self::write_results_raw( $fh, $results); break;
-            case 'json5':      self::write_results_json5( $fh, $results); break;
             case 'yaml':       self::write_results_yaml( $fh, $results); break;
         }
 
@@ -84,14 +83,6 @@ class Report
     }
 
 
-    /* writes out results in jsonpretty format
-     */
-    static public function write_results_json5( $fh, $results ) {
-        $buf = \RedCat\JSON5\JSON5::encode( $results,  JSON_PRETTY_PRINT, $keep_comments = true );
-        $buf = self::highlighter( $buf, 'json' );
-        fwrite( $fh,  $buf . "\n" );
-    }
-
     /* writes out results in yaml format
      */
     static public function write_results_yaml( $fh, $results ) {
@@ -106,7 +97,7 @@ class Report
     static protected function write_results_print_r( $fh, $results ) {
 
         $buf = print_r($results, true );
-        $buf = self::highlighter( $buf, null );
+        $buf = self::highlighter( $buf, 'php-printr' );
         fwrite( $fh, $buf . "\n" );
     }
     
@@ -116,7 +107,7 @@ class Report
     static protected function write_results_var_dump( $fh, $results ) {
 
         $buf = var_export($results, true );
-        $buf = self::highlighter( $buf, null );
+        $buf = self::highlighter( $buf, 'php-vardump' );
         fwrite( $fh, $buf . "\n" );
     }
 
@@ -124,7 +115,7 @@ class Report
      */
     static protected function write_results_serialize( $fh, $results ) {
         $buf = serialize($results);
-        $buf = self::highlighter( $buf, null );
+        $buf = self::highlighter( $buf, 'php-serialize' );
         fwrite( $fh, $buf . "\n" );
     }
 
@@ -140,15 +131,11 @@ class Report
         if(!$type || !self::$params['highlight']) {
             return $buf;
         }
-        
-        $highlighter = null;
-        switch($type) {
-            case 'json': $highlighter = new \CliHighlighter\Service\Highlighter\JsonHighlighter([]); break;
-            case 'yaml': $highlighter = new \CliHighlighter\Service\Highlighter\YamlHighlighter([]); break;
-            case 'xml':  $highlighter = new \CliHighlighter\Service\Highlighter\XmlHighlighter([]); break;
-            default: return $buf;
-        }
-        return $highlighter->highlight($buf);
+        ;
+        $highlighter = new \Highlight\Highlighter(
+            new \Highlight\Decorator\StatefulCliDecorator([])
+        );
+        return $highlighter->highlight($type, $buf)->value;
     }
     
     
