@@ -53,6 +53,7 @@ function main()
         if(@$params) {        
             $format = @$params['format'] ?: 'printr';
             $err = MyLogger::getInstance()->exception_to_array( $e );
+            $err = (count($err) == 1) ? $err[0] : $err;
             Report::printResults($params, $err);
         }
         else {
