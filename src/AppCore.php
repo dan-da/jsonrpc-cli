@@ -52,6 +52,8 @@ class AppCore
             $client->getHttpClient()->response_fh = $httpout_fh;
         }
         
+        $client->getHttpClient()->setTimeout($params['timeout']);
+        
         $args = $params['params'];
         if($args === null) {
             $args = [];
@@ -75,6 +77,5 @@ class AppCore
         
         return $result;        
     }
-    
 }
 

@@ -26,6 +26,7 @@ class Util
             'httpfile:',
             'version',
             'highlight:',
+            'timeout:',
             'help',
         );
 
@@ -71,6 +72,7 @@ class Util
                 
         $params['method'] = @$params['method'];
         $params['httpfile'] = @$params['httpfile'];
+        $params['timeout'] = @$params['timeout'] ?: PHP_INT_MAX;
         
         $params['params'] = json_decode($params['params'], true);
         if(json_last_error() != JSON_ERROR_NONE) {
@@ -128,6 +130,8 @@ class Util
     --pass <pass>        password for http basic auth
 
     --outfile=<path>     specify output file path.
+    
+    --timeout=<s>        request timeout in secs.  default = none.
     
     --format=<format>    [ raw|json|jsonpretty|json5|printr|vardump|serialize|all ]
                            
