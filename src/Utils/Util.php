@@ -38,7 +38,18 @@ class Util
         
         $params['url'] = @$argv[$optind];
         $params['method'] = @$argv[$optind+1];
-        $params['params'] = @$argv[$optind+2];        
+
+        // handle multiple params passed via command-line.        
+        if(count($argv) > $optind+3) {
+            $params['params'] = [];
+            for($idx = $optind+2; $idx < count($argv); $idx++) {
+                $val = $argv[$idx];
+                $params['params'][] = is_numeric($val) ? $val + 0 : $val;
+            }
+        }
+        else {
+            $params['params'] = @$argv[$optind+2];
+        }
 
         
         return $params;
@@ -73,10 +84,18 @@ class Util
         $params['method'] = @$params['method'];
         $params['httpfile'] = @$params['httpfile'];
         $params['timeout'] = @$params['timeout'] ?: PHP_INT_MAX;
-        
-        $params['params'] = json_decode($params['params'], true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            throw new UsageException("Invalid JSON in parameters.  " . json_last_error_msg() );
+
+        if(!is_array(@$params['params'])) {
+            $fchar = @trim(@$params['params'])[0];
+            if($fchar && $fchar != '[' && $fchar != '{') {
+                $params['params'] = [ $params['params'] ];
+            }
+            else {
+                $params['params'] = @$params['params'] ? json_decode($params['params'], true) : null;
+                if(json_last_error() != JSON_ERROR_NONE) {
+                    throw new UsageException("Invalid JSON in parameters.  " . json_last_error_msg() );
+                }
+            }
         }
 
         if(!$params['url']) {
@@ -121,8 +140,11 @@ class Util
 
    This script makes a request to a jsonrpc server.
    
-   params should be provided in json format.  eg:
-     "6" or "6,7", or "[6,7]", or '{color: "red", size: "small"}'
+   params may be provided as either:
+     (a) space separated scalar values, eg: "6" or "6" "7"  -- or --
+     (b) json values, eg: "[6] or "[6,7]", or '{color: "red", size: "small"}'
+         
+         note: json values can have nested arrays or objects. 
 
    Options:
    
