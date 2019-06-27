@@ -34,32 +34,30 @@ hold the software author liable in any manner.
 The output may be printed in the following formats:
 * jsonpretty - pretty-printed json.  ( default )
 * json       - compact json
+* yaml       - pretty printed yaml
 * raw        - raw text response from server
 * printr     - tree format using php's print_r() function
 * vardump    - tree format using php's var_dump() function
 * serialize  - tree format using php's serialize() function
-* md         - markdown formatted table
-* txt        - an ascii formatted table, intended for humans.
-* html       - an html formatted table.
-* csv        - CSV formatted table.  For spreadsheet programs.
-* list       - single column list. for easy cut/paste.  uses first col.
 
-note: table formats assume that results are an array of objects where each
-inner object represents a row.  Scalar values are converted to this format.
-Other structures may not work well.
+# Highlighting / colors
 
+Colored output is available for all formats except raw.
+
+Use the flag --highlight=on (default) or --highlight=off to disable.
 
 # Usage
 
 ```
-$ ./jsonrpc-cli --help
-
    jsonrpc-cli.php [options] <url> <method> [params]
 
    This script makes a request to a jsonrpc server.
    
-   params should be provided in json format.  eg:
-     "6" or "6,7", or "[6,7]", or '{color: "red", size: "small"}'
+   params may be provided as either:
+     (a) space separated scalar values, eg: "6" or "6" "7"  -- or --
+     (b) json values, eg: "[6] or "[6,7]", or '{color: "red", size: "small"}'
+         
+         note: json values can have nested arrays or objects. 
 
    Options:
    
@@ -68,8 +66,9 @@ $ ./jsonrpc-cli --help
 
     --outfile=<path>     specify output file path.
     
-    --format=<format>    [ raw|txt|md|csv|json|jsonpretty|html|list
-                           printr|vardump|serialize|all ]
+    --timeout=<s>        request timeout in secs.  default = none.
+    
+    --format=<format>    [ raw|json|jsonpretty|yaml|printr|vardump|serialize|all ]
                            
                          default=jsonpretty
                          
@@ -80,7 +79,8 @@ $ ./jsonrpc-cli --help
                          for each format with appropriate extension.
                          only works when outfile is specified.
                          
-                         'list' prints only the first column. see --cols
+    --highlight=<flag>   [ 'on' | 'off' ]   default = on.
+                           highlights output if possible, depending on --format.
 
     --logfile=<path>    path to logfile. if not present logs to stdout.
     --loglevel=<level>  debug,info,specialinfo,warning,exception,fatalerror
