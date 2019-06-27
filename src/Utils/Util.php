@@ -155,7 +155,7 @@ class Util
     
     --timeout=<s>        request timeout in secs.  default = none.
     
-    --format=<format>    [ raw|json|jsonpretty|json5|printr|vardump|serialize|all ]
+    --format=<format>    [ raw|json|jsonpretty|yaml|printr|vardump|serialize|all ]
                            
                          default=jsonpretty
                          
