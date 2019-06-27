@@ -79,7 +79,13 @@ Use the flag --highlight=on (default) or --highlight=off to disable.
                          for each format with appropriate extension.
                          only works when outfile is specified.
                          
-    --highlight=<flag>   [ 'on' | 'off' ]   default = on.
+    --resultonly=<flag>  [ on | off ]   default = on.
+                           on  --> display "result" key of server's json response.
+                           off --> display server's entire json response.
+                           
+                           note: --format=raw forces --resultonly=off
+                         
+    --highlight=<flag>   [ on | off ]   default = on.
                            highlights output if possible, depending on --format.
 
     --logfile=<path>    path to logfile. if not present logs to stdout.

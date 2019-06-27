@@ -62,8 +62,8 @@ class AppCore
             $args = is_array($args) ? $args : [$args];
         }
         
-        $is_raw = $params['format'] == 'raw';        
-        $result = $client->execute($params['method'], $args, $reqattrs = [], $requestId = null, $headers = [], $is_raw);
+        $is_raw = $params['format'] == 'raw';
+        $result = $client->execute($params['method'], $args, $reqattrs = [], $requestId = null, $headers = [], $is_raw, $params['resultonly']);
         
         $map = [HttpClient::level_info => MyLogger::info,
                 HttpClient::level_debug => MyLogger::debug,

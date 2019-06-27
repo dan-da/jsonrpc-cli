@@ -26,6 +26,7 @@ class Util
             'httpfile:',
             'version',
             'highlight:',
+            'resultonly:',
             'timeout:',
             'help',
         );
@@ -80,6 +81,7 @@ class Util
         $params['pass'] = @$params['pass'];
         $params['url'] = @$params['url'];        
         $params['highlight'] = @$params['highlight'] == 'off' ? false : true;
+        $params['resultonly'] = @$params['resultonly'] == 'off' ? false : true;
                 
         $params['method'] = @$params['method'];
         $params['httpfile'] = @$params['httpfile'];
@@ -166,7 +168,13 @@ class Util
                          for each format with appropriate extension.
                          only works when outfile is specified.
                          
-    --highlight=<flag>   [ 'on' | 'off' ]   default = on.
+    --resultonly=<flag>  [ on | off ]   default = on.
+                           on  --> display "result" key of server's json response.
+                           off --> display server's entire json response.
+                           
+                           note: --format=raw forces --resultonly=off
+                         
+    --highlight=<flag>   [ on | off ]   default = on.
                            highlights output if possible, depending on --format.
 
     --logfile=<path>    path to logfile. if not present logs to stdout.
