@@ -89,7 +89,7 @@ class Util
 
         if(!is_array(@$params['params'])) {
             $fchar = @trim(@$params['params'])[0];
-            if($fchar && $fchar != '[' && $fchar != '{') {
+            if($fchar !== '' && $fchar != '[' && $fchar != '{') {
                 $params['params'] = [ $params['params'] ];
             }
             else {
