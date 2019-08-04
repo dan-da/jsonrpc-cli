@@ -8,17 +8,129 @@ This tool is useful for manually performing single json-rpc queries from the com
 Typically this is useful for debugging purposes or one-off needs.
 
 A distinguishing feature of this client is that it supports logging the raw HTTP communications
-(request, headers, response) to a logfile.  So one can see exactly what the server is
-receiving and what it returns.
+(request, headers, response) to a logfile.  So one can see exactly what is sent to the server
+and what it returns.
+
+The tool also colors the results (syntax highlighting) and can output results in multiple structured data
+formats such as json, yaml, print_r, var_dump, and php's serialization format.
+
+# Motivation
+
+I built this tool because I needed to debug json-rpc interactions between two third-party tools.  I wanted
+to see exactly what http headers are sent and exactly what the server responds with, but existing json-rpc
+tools and libraries I found did not support this.
 
 
-# examples.
+# Examples
 
-## example 1.
+## Basic typical usage
 
-Todo.
+By default, only the value of the "result" field of the server's json-rpc response will be displayed.
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword  http://localhost:28332/ getblockcount
+
+588589
+```
+
+## Server's full json response.
+
+For this, we specify --resultonly=off
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --resultonly=off  http://localhost:28332/ getblockcount
+
+{
+    "error": null,
+    "result": 588590,
+    "id": 2048885931,
+    "jsonrpc": "2.0"
+}
+```
 
 
+### Need to debug?  We can log the full http request and response to a file.
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --format=raw --httpfile=/tmp/http.log  http://localhost:28332/ getblockcount
+
+{"error": null, "result": 588593, "id": 941852157, "jsonrpc": "2.0"}
+
+$ cat /tmp/http.log
+POST / HTTP/1.0
+Accept: text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*
+Accept-Language: en-us
+Host: localhost
+User-Agent: Mozilla/4.0 (compatible; jsonrpc-cli HTTP Client; Linux)
+Connection: Close
+Content-Length: 57
+Authorization: Basic cnBjdXNlcjpycGNwYXNzd29yZA==
+Cookie: 
+
+{"jsonrpc":"2.0","method":"getblockcount","id":941852157}
+
+HTTP/1.0 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 68
+Date: Sun, 04 Aug 2019 16:09:41 GMT
+Server: Python/3.5 aiohttp/3.0.0b0
+
+{"error": null, "result": 588593, "id": 941852157, "jsonrpc": "2.0"}
+```
+
+## We can also display the result data in other formats.
+
+Available formats are raw|json|jsonpretty|yaml|printr|vardump|serialize
+
+
+### Let's see the server's raw response without any formatting.
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --format=raw  http://localhost:28332/ getblockcount
+
+{"error": null, "result": 588593, "id": 641121075, "jsonrpc": "2.0"}
+```
+
+
+### yaml example
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --format=yaml  http://localhost:28332/ getblockchaininfo
+
+pruned: false
+bestblockhash: >
+  0000000000000000001babf6c3e29d839db7b208dfab64948b015796a8b45a72
+headers: 588593
+blocks: 588593
+chain: main
+difficulty: null
+chainwork: null
+warning: >
+  spruned 0.0.2a3, emulating bitcoind
+  v0.16
+verificationprogress: 100
+mediantime: 1564934597
+```
+
+### printr example
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --format=printr  http://localhost:28332/ getblockchaininfo
+
+Array
+(
+    [pruned] => 
+    [bestblockhash] => 0000000000000000001babf6c3e29d839db7b208dfab64948b015796a8b45a72
+    [headers] => 588593
+    [blocks] => 588593
+    [chain] => main
+    [difficulty] => 
+    [chainwork] => 
+    [warning] => spruned 0.0.2a3, emulating bitcoind v0.16
+    [verificationprogress] => 100
+    [mediantime] => 1564934597
+)
+```
 
 # Use at your own risk.
 
@@ -46,9 +158,12 @@ Colored output is available for all formats except raw.
 
 Use the flag --highlight=on (default) or --highlight=off to disable.
 
+
 # Usage
 
 ```
+$./jsonrpc-cli --help
+
    jsonrpc-cli.php [options] <url> <method> [params]
 
    This script makes a request to a jsonrpc server.
@@ -98,22 +213,20 @@ Use the flag --highlight=on (default) or --highlight=off to disable.
 
 # Installation and Running.
 
-Linux Ubuntu 16.04 requirements:
+Ubuntu 16.04 requirements:
 ```
-apt-get install php composer
-```
-
-Basics   ( see below for big performance speedup )
-```
- git clone https://github.com/dan-da/jsonrpc-cli
- cd jsonrpc-cli
- composer install
+$ apt-get install php composer
 ```
 
+Basics
+```
+$ git clone https://github.com/dan-da/jsonrpc-cli
+$ cd jsonrpc-cli
+$ composer install
+$ ./jsonrpc-cli --help
+```
 
 
 # Todos
 
-* Handle error conditions better
 * Support batching (maybe)
-* colored json pretty printing
