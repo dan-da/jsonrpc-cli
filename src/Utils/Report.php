@@ -123,6 +123,10 @@ class Report
     /* writes out results as php var_dump format
      */
     static protected function write_results_raw( $fh, $results ) {
+	if( !is_string($results)) {
+            self::write_results_yaml($fh, $results);
+            return;
+        }
         fwrite( $fh, $results . "\n" );
     }
     
