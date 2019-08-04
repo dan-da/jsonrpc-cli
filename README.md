@@ -176,8 +176,8 @@ $./jsonrpc-cli --help
 
    Options:
    
-    --user <user>        username for http basic auth
-    --pass <pass>        password for http basic auth
+    --user=<user>        username for http basic auth
+    --pass=<pass>        password for http basic auth
 
     --outfile=<path>     specify output file path.
     
