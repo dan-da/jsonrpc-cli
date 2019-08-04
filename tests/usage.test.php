@@ -11,7 +11,7 @@ class usage extends tests_common {
     }
 
     protected function test_usage() {
-        // check xprv derivation results in correct addresses.
+        // setup cli params 
         $params = [
             'help' => null,
         ];
