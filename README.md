@@ -229,4 +229,6 @@ $ ./jsonrpc-cli --help
 
 # Todos
 
+* make test cases
 * Support batching (maybe)
+
