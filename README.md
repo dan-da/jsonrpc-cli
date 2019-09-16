@@ -37,7 +37,7 @@ $ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword  http://localhost:28332/ getbl
 
 For this, we specify --resultonly=off
 
-```
+```json
 $ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --resultonly=off  http://localhost:28332/ getblockcount
 
 {
@@ -94,7 +94,7 @@ $ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --format=raw  http://localhost
 
 ### yaml example
 
-```
+```yaml
 $ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --format=yaml  http://localhost:28332/ getblockchaininfo
 
 pruned: false
@@ -158,6 +158,41 @@ Colored output is available for all formats except raw.
 
 Use the flag --highlight=on (default) or --highlight=off to disable.
 
+Examples:
+
+![Image](doc/image/example1.png?raw=true)
+
+![Image](doc/image/example2.png?raw=true)
+
+![Image](doc/image/example3.png?raw=true)
+
+
+Or, if you use the one true Green on Black background:
+![Image](doc/image/example4.png?raw=true)
+
+# Errors
+
+Exceptions are displayed as structured data, according to --format flag and can be easily read
+by a calling program.
+
+```yaml
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword --format=yaml  http://localhost:28332/ getblockchaininfos
+message: HTTP/1.0 404 Not Found
+class: JsonRPC\Exception\NotFoundException
+code: 404
+file: >
+  /tmp/jsonrpc-cli/vendor/dan-da/json-rpc/src/JsonRPC/HttpClient.php
+line: 654
+trace:
+  - '/tmp/jsonrpc-cli/vendor/dan-da/json-rpc/src/JsonRPC/HttpClient.php:324 in JsonRPC\HttpClient->handleExceptions'
+  - '/tmp/jsonrpc-cli/vendor/dan-da/json-rpc/src/JsonRPC/HttpClient.php:152 in JsonRPC\HttpClient->sendRequest'
+  - '/tmp/jsonrpc-cli/vendor/dan-da/json-rpc/src/JsonRPC/HttpClient.php:159 in JsonRPC\HttpClient->post'
+  - '/tmp/jsonrpc-cli/vendor/dan-da/json-rpc/src/JsonRPC/Client.php:195 in JsonRPC\HttpClient->execute'
+  - '/tmp/jsonrpc-cli/vendor/dan-da/json-rpc/src/JsonRPC/Client.php:177 in JsonRPC\Client->sendPayload'
+  - '/tmp/jsonrpc-cli/src/AppCore.php:66 in JsonRPC\Client->execute'
+  - '/tmp/jsonrpc-cli/jsonrpc-cli:43 in App\AppCore->request'
+  - /tmp/jsonrpc-cli/jsonrpc-cli:73 in main
+```
 
 # Usage
 
