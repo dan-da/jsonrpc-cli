@@ -33,6 +33,32 @@ $ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword  http://localhost:28332/ getbl
 588589
 ```
 
+## With method parameters
+
+### params as separate command-line args
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword   http://localhost:28332/ estimatesmartfee 1 ECONOMICAL
+
+{
+    "_feerate": "0.00027031",
+    "blocks": 1,
+    "feerate": 0.00027031
+}
+```
+
+### params as a json string
+
+```
+$ ./jsonrpc-cli --user=rpcuser --pass=rpcpassword   http://localhost:28332/ estimatesmartfee '[1,"ECONOMICAL"]'
+
+{
+    "_feerate": "0.00027031",
+    "blocks": 1,
+    "feerate": 0.00027031
+}
+```
+
 ## Server's full json response.
 
 For this, we specify --resultonly=off
@@ -264,6 +290,7 @@ $ ./jsonrpc-cli --help
 
 # Todos
 
+* read method parameters from stdin
 * make test cases
 * Support batching (maybe)
 
