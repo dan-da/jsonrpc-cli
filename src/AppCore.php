@@ -63,7 +63,7 @@ class AppCore
         }
         
         $is_raw = $params['format'] == 'raw';
-        $result = $client->execute($params['method'], $args, $reqattrs = [], $requestId = null, $headers = [], $is_raw, $params['resultonly']);
+        $result = $client->execute($params['method'], $args, $reqattrs = [], $requestId = null, $headers = ['Content-Type' => 'application/json'], $is_raw, $params['resultonly']);
         
         $map = [HttpClient::level_info => MyLogger::info,
                 HttpClient::level_debug => MyLogger::debug,
